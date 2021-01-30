@@ -8,9 +8,6 @@ yolov5/output
 yolov5/coco
 storage.googleapis.com
 
-data/samples/*
-**/results*.txt
-*.jpg
 
 # Neural Network weights -----------------------------------------------------------------------------------------------
 **/*.weights

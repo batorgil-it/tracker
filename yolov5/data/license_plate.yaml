@@ -1,0 +1,8 @@
+train: ./train/images/train2020/
+val: ./train/images/val2020/
+
+# number of classes
+nc: 1
+
+# class names
+names: ["plate"]
