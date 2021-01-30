@@ -24,6 +24,11 @@ palette = (2 ** 11 - 1, 2 ** 15 - 1, 2 ** 20 - 1)
 
 ids = []
 
+source = os.getenv('SOURCE')
+line1 = int(os.getenv('LINE1', 480))
+line2 = int(os.getenv('LINE2', 570))
+cam_witdh = int(os.getenv('WIDTH', 704))
+
 def bbox_rel(*xyxy):
     """" Calculates the relative bounding box from absolute pixel values. """
     bbox_left = min([xyxy[0].item(), xyxy[2].item()])
@@ -56,7 +61,7 @@ def draw_boxes(img, bbox, identities=None, offset=(0, 0)):
         id = int(identities[i]) if identities is not None else 0
         color = compute_color_for_labels(id)
         label = '{}{:d}'.format("", id)
-        if id not in ids and y2 > 480 and y2 < 545:
+        if id not in ids and y2 > line1 and y2 < line2:
             crop_img = img[y1:y2, x1:x2]
             
             now = datetime.now(tz_AU)
@@ -79,7 +84,6 @@ def detect(opt, save_img=False):
     out, weights, view_img, save_txt, imgsz = \
         opt.output, opt.weights, opt.view_img, opt.save_txt, opt.img_size
         
-    source = os.getenv('SOURCE')
     webcam = source == '0' or source.startswith(
         'rtsp') or source.startswith('http') or source.endswith('.txt')
 
@@ -206,12 +210,12 @@ def detect(opt, save_img=False):
             print('%sDone. (%.3fs)' % (s, t2 - t1))
 
             # Stream results
-            # if view_img:
-            #     cv2.line(im0, (0, 480), (704, 480), [255, 255, 255], 2)
-            #     cv2.line(im0, (0, 543), (704, 543), [255, 255, 255], 2)
-            #     cv2.imshow(p, im0)
-            #     if cv2.waitKey(1) == ord('q'):  # q to quit
-            #         raise StopIteration
+            if view_img:
+                cv2.line(im0, (0, line1), (cam_witdh, line1), [255, 255, 255], 2)
+                cv2.line(im0, (0, line2), (cam_witdh, line2), [255, 255, 255], 2)
+                cv2.imshow(p, im0)
+                if cv2.waitKey(1) == ord('q'):  # q to quit
+                    raise StopIteration
 
             # Save results (image with detections)
             if save_img:
