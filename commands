@@ -1,0 +1,12 @@
+conda activate yolo_tracker
+tensorboard --logdir=runs
+
+python train.py --img 640 --batch 8 --epochs 100 --data ./data/license_plate.yaml --cfg ./models/yolov5s.yaml --weights '' --device 0
+
+
+docker run -it --gpus all --ipc=host -v /home/ubuntu/parking-data:/usr/src/app/inference batorgil1/mgl-p:latest
+python3 track.py --source rtsp://192.168.1.189
+
+
+
+docker run -d --gpus all --ipc=host -e SOURCE=rtsp://192.168.1.189 -v /home/ubuntu/parking-data:/usr/src/app/inference batorgil1/mgl-p:latest
